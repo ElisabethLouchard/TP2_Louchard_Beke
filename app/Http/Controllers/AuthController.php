@@ -2,63 +2,54 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class AuthController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
+    public function login(Request $request)
+    {       
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+            'name' => 'required',
+            'password' => 'required',
+            'email' => 'required|email:rfc,dns',
+        ]);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], BAD_REQUEST);
+        }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $user = new User();
+        $user->id = $request->input('id');
+        $user->name = $request->input('name');
+        $user->password = bcrypt($request->input('password'));
+        $user->email = $request->input('email');
+        $user->save();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        if (Auth::attempt(['email' => $request->input('email'), 'password' => $request->input('password')])) {
+            $token = $user->createToken('User jeton');
+            return response()->json(['token' => $token->plainTextToken],OK);
+        } else {
+            return response()->json(['error' => 'Erreur lors de l\'authentification'], UNAUTHORIZED);
+        }
     }
+	
+	//Copiez votre register complet ici + la route pour y accéder
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function register(Request $request)
     {
-        //
-    }
+        $userCredentials = $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+        ]);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        if (auth()->attempt($userCredentials)) {
+            return ;
+        } else {
+            return ;
+        }
     }
 }
