@@ -47,7 +47,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = $request->user();
-            $token = $user->createToken('User Token')->plainTextToken;
+            $token = $user->createToken('Connexion Token')->plainTextToken;
             return response()->json(['token' => $token], CREATED); 
         } else {
             return response()->json(['error' => 'Erreur d\'authentification'], UNAUTHORIZED); 
@@ -56,11 +56,13 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $user = $request->user();
-        $user->tokens()->delete(); 
-
-        return response()->json(null, NO_CONTENT); 
-
-
+        if (Auth::check()) {
+            $user = $request->user();
+            $user->tokens()->delete();
+        } else {
+            return response()->json(['error' => 'Non authentifié'], UNAUTHORIZED);
+        }
+    
+        return response()->json(null, NO_CONTENT);
     }
 }
