@@ -14,9 +14,11 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
+            'login' => 'required',
             'password' => 'required',
             'email' => 'required|email:rfc,dns|unique:users,email',
+            'last_name' => 'required',
+            'first_name' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -24,9 +26,11 @@ class AuthController extends Controller
         }
 
         $user = new User();
-        $user->name = $request->input('name');
+        $user->login = $request->input('login');
         $user->password = bcrypt($request->input('password'));
         $user->email = $request->input('email');
+        $user->last_name = $request->input('last_name');
+        $user->first_name = $request->input('first_name');
         $user->save();
 
         $token = $user->createToken('User Token')->plainTextToken;
