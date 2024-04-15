@@ -20,3 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //Routes du TP2 ici : 
 Route::get('/films', 'App\Http\Controllers\FilmController@index');
+
+Route::post('/signup', 'App\Http\Controllers\AuthController@register');
+Route::get('/signin', 'App\Http\Controllers\AuthController@login');
+Route::get('/signout', 'App\Http«\Controllers\AuthController@logout');
