@@ -9,13 +9,14 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
-    {       
+	//Copiez votre register complet ici + la route pour y accéder
+
+    public function register(Request $request)
+    {
         $validator = Validator::make($request->all(), [
-            'id' => 'required',
             'name' => 'required',
             'password' => 'required',
-            'email' => 'required|email:rfc,dns',
+            'email' => 'required|email:rfc,dns|unique:users,email',
         ]);
 
         if ($validator->fails()) {
@@ -23,33 +24,39 @@ class AuthController extends Controller
         }
 
         $user = new User();
-        $user->id = $request->input('id');
         $user->name = $request->input('name');
         $user->password = bcrypt($request->input('password'));
         $user->email = $request->input('email');
         $user->save();
 
-        if (Auth::attempt(['email' => $request->input('email'), 'password' => $request->input('password')])) {
-            $token = $user->createToken('User jeton');
-            return response()->json(['token' => $token->plainTextToken],OK);
-        } else {
-            return response()->json(['error' => 'Erreur lors de l\'authentification'], UNAUTHORIZED);
-        }
-    }
-	
-	//Copiez votre register complet ici + la route pour y accéder
+        $token = $user->createToken('User Token')->plainTextToken;
 
-    public function register(Request $request)
+        return response()->json(['token' => $token], CREATED); 
+    }
+
+    public function login(Request $request)
     {
-        $userCredentials = $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
+        $credentials = $request->validate([
+            'email' => 'required|email:rfc,dns',
+            'password' => 'required',
         ]);
 
-        if (auth()->attempt($userCredentials)) {
-            return ;
+        if (Auth::attempt($credentials)) {
+            $user = $request->user();
+            $token = $user->createToken('User Token')->plainTextToken;
+            return response()->json(['token' => $token], CREATED); 
         } else {
-            return ;
+            return response()->json(['error' => 'Erreur d\'authentification'], UNAUTHORIZED); 
         }
+    }
+
+    public function logout(Request $request)
+    {
+        $user = $request->user();
+        $user->tokens()->delete(); 
+
+        return response()->json(null, NO_CONTENT); 
+
+
     }
 }
