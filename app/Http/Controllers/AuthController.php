@@ -33,15 +33,15 @@ class AuthController extends Controller
         $user->first_name = $request->input('first_name');
         $user->save();
 
-        $token = $user->createToken('User Token')->plainTextToken;
+        //$token = $user->createToken('User Token')->plainTextToken;
 
-        return response()->json(['token' => $token], CREATED); 
+        return response()->json(['user' => $user], CREATED); 
     }
 
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required|email:rfc,dns',
+            'login' => 'required|max:50',
             'password' => 'required',
         ]);
 
@@ -57,8 +57,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $user = $request->user();
-
-        if ($user) {
+        if ($user != null) {
             $user->tokens()->delete();
         } else {
             return response()->json(['error' => 'Non authentifié'], UNAUTHORIZED);
