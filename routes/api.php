@@ -23,6 +23,6 @@ Route::get('/films', 'App\Http\Controllers\FilmController@index');
 
 Route::middleware('throttle:5,1')->group(function () {
     Route::post('/signup', 'App\Http\Controllers\AuthController@register');
-    Route::get('/signin', 'App\Http\Controllers\AuthController@login');
+    Route::post('/signin', 'App\Http\Controllers\AuthController@login');
     Route::get('/signout',['middleware' => 'auth:sanctum', 'uses' => 'App\Http\Controllers\AuthController@logout']);
 });
