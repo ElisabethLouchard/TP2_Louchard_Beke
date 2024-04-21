@@ -11,6 +11,58 @@ class AuthController extends Controller
 {
 	//Copiez votre register complet ici + la route pour y accéder
 
+    /**
+     * @OA\Post(
+     *     path="/api/signup",
+     *     tags={"Users"},
+     *     summary="Create a new user",
+     *     operationId="createUser",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="User data",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="login",
+     *                     type="string",
+     *                     example="taytay13"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="password",
+     *                     type="string",
+     *                     format="password",
+     *                     example="cardigan"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="email",
+     *                     type="string",
+     *                     format="email",
+     *                     example="taylorswift@gmail.com"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="last_name",
+     *                     type="string",
+     *                     example="Swift"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="first_name",
+     *                     type="string",
+     *                     example="Taylor"
+     *                 ),
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="User created successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     )
+     * )
+     */
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -36,6 +88,47 @@ class AuthController extends Controller
         return response()->json(['user' => $user], CREATED); 
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/signin",
+     *     tags={"Auth"},
+     *     summary="Authenticate user",
+     *     operationId="authenticateUser",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="User credentials",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="login",
+     *                     type="string",
+     *                     example="taytay13"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="password",
+     *                     type="string",
+     *                     example="cardigan"
+     *                 ),
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Successful authentication",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="token", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Erreur d'authentification")
+     *         )
+     *     )
+     * )
+     */
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -52,6 +145,35 @@ class AuthController extends Controller
         }
     }
 
+    /**
+    * @OA\Get(
+    *     path="/api/signout",
+    *     summary="Déconnexion de l'utilisateur",
+    *     tags={"Authentification"},
+    *     security={{"Token":{}}},
+    *     @OA\Response(
+    *         response=204,
+    *         description="Déconnexion réussie"
+    *     ),
+    *     @OA\Response(
+    *         response=401,
+    *         description="Non authentifié",
+    *         @OA\JsonContent(
+    *             @OA\Property(
+    *                 property="error",
+    *                 type="string",
+    *                 example="Non authentifié"
+    *             )
+    *         )
+    *     )
+    * )
+    * @OA\SecurityScheme(
+    *   securityScheme="Token",
+    *   type="http",
+    *   scheme="bearer",
+    *   bearerFormat="JWT"
+    * )
+    */
     public function logout(Request $request)
     {
         $user = $request->user();

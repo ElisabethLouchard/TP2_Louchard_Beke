@@ -25,6 +25,7 @@ define('SEARCH_PAGINATION', 20);
 define('USER', 1);
 define('ADMIN', 2);
 
+/** * @OA\Info(title="Films API", version="0.1") */ 
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
