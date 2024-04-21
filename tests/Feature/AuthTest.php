@@ -77,11 +77,55 @@ class AuthTest extends TestCase
     public function test_register_incomplete_data()
     {
         $userData = [
-            'name' => 'Taylor Swift',
+            'login' => 'taytay13',
             'password' => 'cardigan',
             'email' => 'taylorswift@gmail.com',
         ];
 
+        $response = $this->postJson('/api/signup', $userData);
+        $response->assertStatus(BAD_REQUEST)
+                ->assertJson([
+                    'error' => true,
+                ]);
+    }
+
+    public function test_register_email_already_use()
+    {
+        $userData = [
+            'name' => 'taytay13',
+            'password' => 'cardigan',
+            'email' => 'taylorswift@gmail.com',
+            'last_name' => 'Taylor',
+            'first_name' => 'Swift',
+        ];
+
+        $secondUserData = [
+            'name' => 'taytay13',
+            'password' => 'cardigan',
+            'email' => 'taylorswift@gmail.com',
+            'last_name' => 'Taylor',
+            'first_name' => 'Swift',
+        ];
+
+        $this->postJson('/api/signup', $userData);
+        $response = $this->postJson('/api/signup', $secondUserData);
+        $response->assertStatus(BAD_REQUEST)
+                ->assertJson([
+                    'error' => true,
+                ]);
+    }
+
+    public function test_register_invalid()
+    {
+        $userData = [
+            'name' => 'taytay13',
+            'password' => 'cardigan',
+            'email' => 'taylorswift',
+            'last_name' => 'Taylor',
+            'first_name' => 'Swift',
+        ];
+
+        $this->postJson('/api/signup', $userData);
         $response = $this->postJson('/api/signup', $userData);
         $response->assertStatus(BAD_REQUEST)
                 ->assertJson([
@@ -102,13 +146,21 @@ class AuthTest extends TestCase
         $response = $this->postJson('/api/signup', $userData);
     
         $response->assertStatus(CREATED);
+        $response->assertJson([
+            'user' => [
+                'login' => 'PostMalone123',
+                'email' => 'postmal@gmail.com',
+                'last_name' => 'Malone',
+                'first_name' => 'Post',
+            ]
+        ]);
     }    
 
     public function test_signin_failure()
     {
         $loginData = [
-            'login' => 'wafflehouse@gmail.com',
-            'password' => 'miam',
+            'login' => 'jonasBrother3',
+            'password' => 'waffle',
         ];
 
         $response = $this->postJson('/api/signin', $loginData);
