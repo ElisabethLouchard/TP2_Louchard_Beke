@@ -17,6 +17,23 @@ class FilmController extends Controller
     {
         $this->filmRepository = $filmRepository;
     }
-    
+
+    public function create(Request $request)
+    {
+
+        if(Auth::check())
+        {
+            Auth::user();
+        }
+        try
+        {
+            $film = $this->filmRepository->create($request->all());
+            return (new FilmResource($film))->response()->setStatusCode(CREATED);
+        }
+        catch(Exception $ex)
+        {
+            abort(SERVER_ERROR, 'Server error');
+        }       
+    }   
 }
 
