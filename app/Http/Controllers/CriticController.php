@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Critic;
 use App\Repository\CriticRepositoryInterface;
 use Exception;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class CriticController extends Controller
 {
@@ -18,14 +20,29 @@ class CriticController extends Controller
 
     public function create(Request $request)
     {
-        try
-        {
-            $critic = Critic::create($request->all());
-            return $this->criticRepository->create($critic); 
+        try {
+            $user = Auth::user();
+
+            $filmId = $request->input('film_id');
+            $existingCritic = Critic::where('user_id', $user->id)
+                                    ->where('film_id', $filmId)
+                                    ->first();
+
+            if ($existingCritic) {
+                return response()->json(['error' => 'Vous avez déjà critiqué ce film.'], FORBIDDEN);
+            }else{
+                $critic = new Critic();
+                $critic->user_id = $user->id;
+                $critic->film_id = $filmId;
+                $critic->score = $request->input('score');
+                $critic->comment = $request->input('comment');
+                $critic->save();
+                return response()->json($critic, CREATED);
+            }
+            
+        } catch (\Exception $ex) {
+            return response()->json(['error' => 'Erreur serveur.'], SERVER_ERROR);
         }
-        catch(Exception $ex)
-        {
-            abort(SERVER_ERROR, 'Server error');
-        }       
     }
+
 }
