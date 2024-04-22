@@ -21,6 +21,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //Routes du TP2 ici : 
 Route::get('/films', 'App\Http\Controllers\FilmController@index');
 
+Route::middleware('throttle:60,1')->group(function(){
+    Route::put('/films/{id}', 'App\Http\Controllers\FilmController@update');
+    Route::post('/critics', 'App\Http\Controllers\CriticController@store');
+    Route::put('/users/{id}', 'App\Http\Controllers\FilmController@update');
+});
+
 Route::middleware('throttle:5,1')->group(function () {
     Route::post('/signup', 'App\Http\Controllers\AuthController@register');
     Route::post('/signin', 'App\Http\Controllers\AuthController@login');
