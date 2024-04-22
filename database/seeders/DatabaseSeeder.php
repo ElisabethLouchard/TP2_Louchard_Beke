@@ -19,7 +19,8 @@ class DatabaseSeeder extends Seeder
             LanguageSeeder::class,
             FilmSeeder::class,
             ActorSeeder::class,
-            FilmActorSeeder::class
+            FilmActorSeeder::class,
+            RoleSeeder::class
         ]);
 
 		//Ne sera pas fait dans le cadre de ce TP, les users et les critiques seront créés par vous
