@@ -83,6 +83,7 @@ class AuthController extends Controller
         $user->email = $request->input('email');
         $user->last_name = $request->input('last_name');
         $user->first_name = $request->input('first_name');
+        $user->role_id = $request->input('role_id', 1);
         $user->save();
 
         return response()->json(['user' => $user], CREATED); 
