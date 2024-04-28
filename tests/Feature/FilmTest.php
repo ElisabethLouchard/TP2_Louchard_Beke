@@ -18,7 +18,16 @@ class FilmTest extends TestCase
         $admin = User::factory()->create(['role_id' => 1]);
         $this->actingAs($admin);
 
-        $movie = Film::factory()->create();
+        $movie = Film::factory()->create([
+            'title' => 'Raiponces',
+            'release_year' => 2010,
+            'length' => 100,
+            'description' => 'Princesse aux cheveux dorés',
+            'rating' => 'G',
+            'language_id' => 1,
+            'special_features' => 'Deleted Scenes,Commentaries',
+            'image' => 'image.jpg',
+        ]);
 
         $requestData = [
             'title' => 'Raiponce',
@@ -27,7 +36,7 @@ class FilmTest extends TestCase
             'description' => 'Princesse aux cheveux dorés',
             'rating' => 'G',
             'language_id' => 1,
-            'special_features' => ['Deleted Scenes', 'Commentaries'],
+            'special_features' => 'Deleted Scenes,Commentaries',
             'image' => 'image.jpg',
         ];
 
@@ -42,7 +51,18 @@ class FilmTest extends TestCase
         $user = User::factory()->create(['role_id' => 2]);
         $this->actingAs($user);
 
-        $movie = Film::factory()->create();
+        $movie = Film::factory()->create([
+            $requestData = [
+                'title' => 'Monster Incorp',
+                'release_year' => 2001,
+                'length' => 90,
+                'description' => 'Sully et Mike',
+                'rating' => 'G',
+                'language_id' => 1,
+                'special_features' => 'Deleted Scenes,Commentaries',
+                'image' => 'image.jpg',
+            ]
+        ]);
 
         $requestData = [
             'title' => 'Monster Inc',
@@ -51,7 +71,7 @@ class FilmTest extends TestCase
             'description' => 'Sully et Mike',
             'rating' => 'G',
             'language_id' => 1,
-            'special_features' => ['Deleted Scenes', 'Commentaries'],
+            'special_features' => 'Deleted Scenes,Commentaries',
             'image' => 'image.jpg',
         ];
 
