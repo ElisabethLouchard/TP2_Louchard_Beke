@@ -97,6 +97,7 @@ class AuthTest extends TestCase
             'email' => 'taylorswift@gmail.com',
             'last_name' => 'Taylor',
             'first_name' => 'Swift',
+            'role_id' => 1,
         ];
 
         $secondUserData = [
@@ -105,6 +106,7 @@ class AuthTest extends TestCase
             'email' => 'taylorswift@gmail.com',
             'last_name' => 'Taylor',
             'first_name' => 'Swift',
+            'role_id' => 1,
         ];
 
         $this->postJson('/api/signup', $userData);

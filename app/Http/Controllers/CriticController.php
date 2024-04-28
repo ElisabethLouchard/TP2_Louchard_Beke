@@ -29,7 +29,7 @@ class CriticController extends Controller
                                     ->first();
 
             if ($existingCritic) {
-                return response()->json(['error' => 'Vous avez déjà critiqué ce film.'], FORBIDDEN);
+                return response()->json(['error' => 'Vous avez déjà critiqué un film.'], FORBIDDEN);
             }else{
                 $critic = new Critic();
                 $critic->user_id = $user->id;

@@ -14,12 +14,15 @@ class UserTest extends TestCase
     public function test_update_password_with_incorrect_current_password()
     {
         $user = User::factory()->create([
-            'name' => 'taytay13',
+            'login' => 'taytay13',
             'password' => 'cardigan',
             'email' => 'taylorswift@gmail.com',
             'last_name' => 'Taylor',
             'first_name' => 'Swift',
+            'role_id' => 1,
         ]);
+
+        $this->actingAs($user);
 
         $requestData = [
             'current_password' => 'willow',
@@ -27,7 +30,7 @@ class UserTest extends TestCase
             'new_password_confirmation' => 'fortnight'
         ];
 
-        $response = $this->actingAs($user)->postJson('/api/update/' . $user->id(), $requestData);
+        $response = $this->actingAs($user)->postJson('/api/update/' . $user->id, $requestData);
 
         $response->assertStatus(FORBIDDEN)
                  ->assertJson(['error' => 'Mot de passe actuel incorrect.']);
@@ -37,11 +40,14 @@ class UserTest extends TestCase
     {
         $user = User::factory()->create([
             'login' => 'LivPurple17',
-            'password' => 'brutal',
+            'password' =>  bcrypt('brutal'),
             'email' => 'oliviarodriguo@gmail.com',
             'last_name' => 'Rodriguo',
             'first_name' => 'Olivia',
+            'role_id' => 1,
         ]);
+
+        $this->actingAs($user);
 
         $requestData = [
             'current_password' => 'brutal',
@@ -49,7 +55,7 @@ class UserTest extends TestCase
             'new_password_confirmation' => 'obsessed'
         ];
 
-        $response = $this->actingAs($user)->postJson('/api/update/' . $user->id(), $requestData);
+        $response = $this->actingAs($user)->postJson('/api/update/' . $user->id, $requestData);
 
         $response->assertStatus(OK)
                  ->assertJson(['message' => 'Mot de passe mis à jour avec succès.']);

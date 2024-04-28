@@ -24,7 +24,7 @@ Route::get('/films', 'App\Http\Controllers\FilmController@index');
 Route::middleware('throttle:60,1')->group(function(){
     Route::put('/films/{id}', 'App\Http\Controllers\FilmController@update');
     Route::post('/critics', 'App\Http\Controllers\CriticController@store');
-    Route::put('/users/{id}', 'App\Http\Controllers\UserController@update');
+    Route::patch('/users/{id}', 'App\Http\Controllers\UserController@update');
 });
 
 Route::middleware('throttle:5,1')->group(function () {
