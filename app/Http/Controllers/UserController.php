@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Repository\UserRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
@@ -16,10 +17,10 @@ class UserController extends Controller
         $this->userRepository = $userRepository;
     }
 
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
         try {
-            $user = $request->user();
+            $user = User::find($id);
 
             if (!$user) {
                 return response()->json(['error' => 'Utilisateur non authentifié.'], NOT_FOUND);
@@ -35,7 +36,7 @@ class UserController extends Controller
                 'new_password_confirmation' => 'required|same:new_password', 
             ]);
 
-            $user->password = Hash::make($validatedData['new_password']);
+            $user->password = bcrypt($validatedData['new_password']);
             $user->save();
     
             return response()->json(['message' => 'Mot de passe mis à jour avec succès.'], OK);
