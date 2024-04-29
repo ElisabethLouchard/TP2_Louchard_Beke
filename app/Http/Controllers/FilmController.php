@@ -50,6 +50,29 @@ class FilmController extends Controller
         {
             return response()->json(['message' => "Erreur au niveau du serveur"], SERVER_ERROR); 
         }
-    }   
+    }
+    
+    
+    public function destroy(Request $request, int $film_id)
+    {
+        if(Auth::check())
+        {
+            $roleId = $user->role;
+            if($roleId == ADMIN)
+            {
+                $this->filmRepository->delete($film_id);
+                return response()->json(['message' => "Suppression réussie"], NO_CONTENT);
+            }
+        }
+        else if(Auth::check() == false)
+        {
+            return response()->json(['message' => "L'utilsateur n'est pas authentifié"], UNAUTHORIZED);  
+        }
+        else
+        {
+            return response()->json(['message' => "Erreur au niveau du serveur"], SERVER_ERROR);
+        }
+
+    }
 }
 

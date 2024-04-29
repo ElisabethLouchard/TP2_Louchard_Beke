@@ -24,7 +24,7 @@ Route::get('/films', 'App\Http\Controllers\FilmController@index');
 Route::middleware('throttle:60,1')->group(function(){
     Route::post('films', 'App\Http\Controllers\FilmController@create');
     Route::put('/films/{id}', 'App\Http\Controllers\FilmController@update');
-    Route::delete('/films/{id}', 'App\Http\Controllers\FilmController@delete');
+    Route::delete('/films/{id}', 'App\Http\Controllers\FilmController@destroy');
     Route::post('/critics', 'App\Http\Controllers\CriticController@store');
     Route::get('/user/{id}', 'App\Http\Controllers\CriticController@show');
     Route::put('/users/{id}', 'App\Http\Controllers\FilmController@update');
