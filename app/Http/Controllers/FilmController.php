@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Resources\FilmResource;
 use App\Models\Film;
+use App\Models\Role;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use App\Repository\FilmRepositoryInterface;
 
 
@@ -21,19 +24,32 @@ class FilmController extends Controller
     public function create(Request $request)
     {
 
+        //convertir maybe en repository
         if(Auth::check())
         {
-            Auth::user();
+            $user = Auth::user();
+
+            //Mettre ca dans une fonction?
+            $roleId = $user->role;
+            if($roleId == ADMIN)
+            {
+                $film = $this->filmRepository->create($request->all());
+                return (new FilmResource($film))->response()->setStatusCode(CREATED);
+            }
+            else
+            {
+                return response()->json(['message' => "L'utilsateur n'a pas les permissions pour créer un film"], UNAUTHORIZED);  
+            }
+            
         }
-        try
+        else if(Auth::check() ==false)
         {
-            $film = $this->filmRepository->create($request->all());
-            return (new FilmResource($film))->response()->setStatusCode(CREATED);
+            return response()->json(['message' => "L'utilsateur n'est pas authentifié"], UNAUTHORIZED);  
         }
-        catch(Exception $ex)
+        else
         {
-            abort(SERVER_ERROR, 'Server error');
-        }       
+            return response()->json(['message' => "Erreur au niveau du serveur"], SERVER_ERROR); 
+        }
     }   
 }
 
