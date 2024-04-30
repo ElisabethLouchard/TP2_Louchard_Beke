@@ -59,7 +59,7 @@ class FilmController extends Controller
                 return response()->json(['error' => 'Vous n\'avez pas les autorisations nécessaires pour cette action.'], FORBIDDEN);
             }
     
-            $movie = Film::find($id);
+            $movie = $this->filmRepository->getById($id);
             if (!$movie) {
                 return response()->json(['error' => 'Le film n\'existe pas.'], NOT_FOUND);
             }

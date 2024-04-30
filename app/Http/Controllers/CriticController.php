@@ -7,7 +7,7 @@ use App\Models\Critic;
 use App\Repository\CriticRepositoryInterface;
 use Exception;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
+use App\Http\Resources\CriticResource;
 
 class CriticController extends Controller
 {
@@ -30,13 +30,8 @@ class CriticController extends Controller
         if ($existingCritic) {
             return response()->json(['error' => 'Vous avez déjà critiqué un film.'], FORBIDDEN);
         }else{
-            $critic = new Critic();
-            $critic->user_id = $user->id;
-            $critic->film_id = $filmId;
-            $critic->score = $request->input('score');
-            $critic->comment = $request->input('comment');
-            $critic->save();
-            return response()->json($critic, CREATED);
+            $critic = $this->criticRepository->create($request->all());
+            return (new CriticResource($critic))->response()->setStatusCode(CREATED);
         }
         
     }
