@@ -4,6 +4,8 @@ namespace App\Repository\Eloquent;
 
 
 use App\Models\Film;
+use App\Models\User;
+use App\Models\Role;
 use App\Repository\FilmRepositoryInterface;
 
 class FilmRepository extends BaseRepository implements FilmRepositoryInterface
@@ -17,11 +19,6 @@ class FilmRepository extends BaseRepository implements FilmRepositoryInterface
    public function __construct(Film $model)
    {
        parent::__construct($model);
-   }
-
-   public function getAverageRental($films)
-   {
-      return round($films->avg('rental_rate'), 2);
    }
 }
 
