@@ -1,0 +1,2 @@
+INSERT INTO `users` (`id`, `login`, `password`, `email`, `last_name`, `first_name`, `role_id`, `created_at`) VALUES
+(1, 'admin_user', 'abcd', 'user_admin@gmail.com', 'admin', 'user', 2, '2006-02-15 15:03:42');

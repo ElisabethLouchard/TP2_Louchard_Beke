@@ -6,7 +6,7 @@ namespace App\Repository\Eloquent;
 use App\Models\Critic;
 use App\Repository\CriticRepositoryInterface;
 
-class CriticRepository extends BaseRepository implements FilmRepositoryInterface
+class CriticRepository extends BaseRepository implements CriticRepositoryInterface
 {
 
     /**
