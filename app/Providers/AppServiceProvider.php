@@ -13,8 +13,6 @@ use App\Repository\Eloquent\UserRepository;
 use App\Repository\UserRepositoryInterface;
 use App\Repository\Eloquent\BaseRepository;
 use App\Repository\RepositoryInterface;
-use App\Repository\LanguageRepositoryInterface;
-use App\Repository\Eloquent\LanguageRepository;
 
 
 class AppServiceProvider extends ServiceProvider

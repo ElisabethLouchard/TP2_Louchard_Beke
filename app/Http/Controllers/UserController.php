@@ -20,8 +20,8 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $user = User::find($id);
-
+            $user = $this->userRepository->getById($id);
+    
             if (!$user) {
                 return response()->json(['error' => 'Utilisateur non authentifié.'], NOT_FOUND);
             }
@@ -33,9 +33,9 @@ class UserController extends Controller
             $validatedData = $request->validate([
                 'current_password' => 'required',
                 'new_password' => 'required|min:6',
-                'new_password_confirmation' => 'required|same:new_password', 
+                'new_password_confirmation' => 'required|same:new_password',
             ]);
-
+    
             $user->password = bcrypt($validatedData['new_password']);
             $user->save();
     
