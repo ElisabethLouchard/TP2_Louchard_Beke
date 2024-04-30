@@ -22,6 +22,11 @@ class CreateUsersTable extends Migration
             $table->string('last_name', 50);
             $table->string('first_name', 50);
             $table->foreignId('role_id')->default(1)->constrained();
+            //$table->unsignedBigInteger('role_id')->default(1);
+        });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreign('role_id')->references('id')->on('roles');
         });
     }
 

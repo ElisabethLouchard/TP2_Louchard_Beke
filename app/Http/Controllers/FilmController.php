@@ -22,14 +22,10 @@ class FilmController extends Controller
 
     public function create(Request $request)
     {
-
-        //convertir maybe en repository
         if(Auth::check())
         {
             $user = Auth::user();
-
-            //Mettre ca dans une fonction?
-            $roleId = $user->role;
+            $roleId = $user->role_id;
             if($roleId == ADMIN)
             {
                 $film = $this->filmRepository->create($request->all());
@@ -37,11 +33,11 @@ class FilmController extends Controller
             }
             else
             {
-                return response()->json(['message' => "L'utilsateur n'a pas les permissions pour créer un film"], UNAUTHORIZED);  
+                return response()->json(['message' => "L'utilsateur n'a pas les permissions pour créer un film"], FORBIDDEN);  
             }
             
         }
-        else if(Auth::check() ==false)
+        else if(Auth::check() == false)
         {
             return response()->json(['message' => "L'utilsateur n'est pas authentifié"], UNAUTHORIZED);  
         }
@@ -88,11 +84,24 @@ class FilmController extends Controller
         if(Auth::check())
         {
             $user = Auth::user();
-            $roleId = $user->role;
+            $roleId = $user->role_id;
+
             if($roleId == ADMIN)
             {
-                $this->filmRepository->delete($film_id);
+                $filmToDelete = Film::findOrFail($film_id);
+                $critics = $filmToDelete->critics;
+
+                foreach($critics as $critic)
+                {
+                    $critic->delete();
+                }
+                $filmToDelete->delete();
+
                 return response()->json(['message' => "Suppression réussie"], NO_CONTENT);
+            }
+            else
+            {
+                return response()->json(['message' => "L'utilsateur n'a pas les permissions pour supprimer ce film"], FORBIDDEN); 
             }
         }
         else if(Auth::check() == false)
