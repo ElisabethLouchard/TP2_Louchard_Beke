@@ -9,6 +9,8 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Repository\FilmRepositoryInterface;
+use Exception;
+use Illuminate\Validation\ValidationException;
 
 class FilmController extends Controller
 {   
@@ -51,14 +53,11 @@ class FilmController extends Controller
     {
         try {
 
-            if (Auth::user()->role_id !== 1) {
+            if (Auth::user()->role_id !== ADMIN) {
                 return response()->json(['error' => 'Vous n\'avez pas les autorisations nécessaires pour cette action.'], FORBIDDEN);
             }
     
             $movie = $this->filmRepository->getById($id);
-            if (!$movie) {
-                return response()->json(['error' => 'Le film n\'existe pas.'], NOT_FOUND);
-            }
     
             $validatedData = $request->validate([
                 'title' => 'required|string',
@@ -67,14 +66,17 @@ class FilmController extends Controller
                 'description' => 'required|string',
                 'rating' => 'required|string',
                 'language_id' => 'required|integer',
-                'special_features' => 'required|array',
+                'special_features' => 'required|string',
                 'image' => 'required|string',
             ]);
     
             $movie->update($validatedData);
     
             return response()->json($movie, OK);
-        } catch (\Exception $ex) {
+        } catch(ValidationException $ex){
+            return response()->json(['error' => 'Le film n\'existe pas.'], NOT_FOUND);
+        }
+        catch (Exception $ex) {
             return response()->json(['error' => 'Erreur serveur.'], SERVER_ERROR);
         }
     }    

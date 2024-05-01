@@ -27,7 +27,7 @@ Route::middleware(['throttle:60,1', 'auth:sanctum'])->group(function(){
     Route::delete('/films/{id}', 'App\Http\Controllers\FilmController@destroy');
     Route::post('/critics', 'App\Http\Controllers\CriticController@store');
     Route::get('/users/{id}', 'App\Http\Controllers\UserController@show');
-    Route::put('/users/{id}', 'App\Http\Controllers\FilmController@update');
+    Route::patch('/users/{id}', 'App\Http\Controllers\UserController@update');
 });
 
 Route::middleware('throttle:5,1')->group(function () {

@@ -18,9 +18,16 @@ class CriticController extends Controller
         $this->criticRepository = $criticRepository;
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         $user = Auth::user();
+
+        $request->validate([
+            'user_id' => 'required', 
+            'film_id'=> 'required', 
+            'score' => 'required',
+            'comment'=> 'required', 
+        ]);
 
         $filmId = $request->input('film_id');
         $existingCritic = Critic::where('user_id', $user->id)
@@ -28,7 +35,7 @@ class CriticController extends Controller
                                 ->first();
 
         if ($existingCritic) {
-            return response()->json(['error' => 'Vous avez déjà critiqué un film.'], FORBIDDEN);
+            return response()->json(['error' => 'Vous avez déjà critiqué ce film.'], FORBIDDEN);
         }else{
             $critic = $this->criticRepository->create($request->all());
             return (new CriticResource($critic))->response()->setStatusCode(CREATED);

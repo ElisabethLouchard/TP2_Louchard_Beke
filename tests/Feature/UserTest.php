@@ -73,4 +73,6 @@ class UserTest extends TestCase
 
         $response->assertStatus(NOT_FOUND);
     }
+
+    // THROTTLE ET 2 MOTS DE PASSE PAREIL
 }
