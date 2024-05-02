@@ -18,7 +18,7 @@ class CriticController extends Controller
         $this->criticRepository = $criticRepository;
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         $user = Auth::user();
 
