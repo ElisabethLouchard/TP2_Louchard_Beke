@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\FilmResource;
-use App\Models\Film;
 use Illuminate\Support\Facades\Auth;
 use App\Repository\FilmRepositoryInterface;
-use Exception;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Validator;
 
 class FilmController extends Controller
 {   
@@ -28,8 +26,28 @@ class FilmController extends Controller
             $roleId = $user->role_id;
             if($roleId == ADMIN)
             {
-                $film = $this->filmRepository->create($request->all());
-                return (new FilmResource($film))->response()->setStatusCode(CREATED);
+                $rules = [
+                    "title" => ['required', 'string'],
+                    'release_year' => ['required', 'int'],
+                    'length' => ['required', 'int'],
+                    "description" =>['required', 'string'],
+                    "rating" => ['required', 'int'],
+                    "language_id"=> ['required', 'int'],
+                    "special_features"=> ['required', 'string'],
+                    "image"=> ['required', 'string']
+                ];
+        
+                $validator = Validator::make($request->all(), $rules);
+        
+                if ($validator->fails()) {
+                    
+                    return response()->json(['message' => $validator->errors()], INVALID_DATA);
+                }
+                else
+                {
+                    $film = $this->filmRepository->create($request->all());
+                    return (new FilmResource($film))->response()->setStatusCode(CREATED);
+                }
             }
             else
             {
@@ -84,14 +102,18 @@ class FilmController extends Controller
 
             if($roleId == ADMIN)
             {
-                $filmToDelete = Film::findOrFail($film_id);
+                $filmToDelete = $this->filmRepository->getById($film_id);
+                //Film::findOrFail($film_id);
                 $critics = $filmToDelete->critics;
 
+        
                 foreach($critics as $critic)
                 {
-                    $critic->delete();
+                    $this->filmRepository->delete($critic->id);
+                    //$critic->delete();
                 }
-                $filmToDelete->delete();
+                $this->filmRepository->delete($filmToDelete->id);
+                //$filmToDelete->delete();
 
                 return response()->json(['message' => "Suppression réussie"], NO_CONTENT);
             }
