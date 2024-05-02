@@ -23,7 +23,7 @@ class CriticController extends Controller
      *     path="/api/critics/{filmId}",
      *     summary="Créer une critique pour un film",
      *     tags={"Critics"},
-     *     security={{"BearerAuth":{}}},
+     *     security={{"Token":{}}},
      *     @OA\Parameter(
      *         name="filmId",
      *         in="path",
@@ -62,11 +62,6 @@ class CriticController extends Controller
      *         )
      *     )
      * )
-     * @OA\SecurityScheme(
-     *   securityScheme="BearerCritic",
-     *   type="http",
-     *   scheme="bearer",
-     *   bearerFormat="JWT"
      * )
     */
     public function store(Request $request, int $filmId)

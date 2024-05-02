@@ -256,7 +256,7 @@
                 },
                 "security": [
                     {
-                        "BearerAuth": []
+                        "Token": []
                     }
                 ]
             }
@@ -407,7 +407,148 @@
                 },
                 "security": [
                     {
-                        "BearerAuth": []
+                        "Token": []
+                    }
+                ]
+            }
+        },
+        "/users/{id}": {
+            "patch": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Mise à jour du mot de passe de l'utilisateur",
+                "operationId": "6055962f27a3fb88a3445c27693dcf5f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de l'utilisateur dont le mot de passe doit être mis à jour",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Nouveau mot de passe de l'utilisateur",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "new_password": {
+                                        "description": "Nouveau mot de passe",
+                                        "type": "string",
+                                        "format": "password",
+                                        "minLength": 6
+                                    },
+                                    "new_password_confirmation": {
+                                        "description": "Confirmation du nouveau mot de passe",
+                                        "type": "string",
+                                        "format": "password",
+                                        "minLength": 6
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Mot de passe mis à jour avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Message indiquant que le mot de passe a été mis à jour",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Non authentifié"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Accès interdit",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Vous n'avez pas les autorisations nécessaires pour cette action."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Utilisateur non trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Utilisateur non trouvé."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erreur de validation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Le nouveau mot de passe et sa confirmation doivent correspondre."
+                                        },
+                                        "errors": {
+                                            "description": "Liste des erreurs de validation détaillées",
+                                            "type": "object",
+                                            "example": {
+                                                "new_password_confirmation": [
+                                                    "Le nouveau mot de passe et sa confirmation doivent correspondre."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Token": []
                     }
                 ]
             }
@@ -416,16 +557,6 @@
     "components": {
         "securitySchemes": {
             "Token": {
-                "type": "http",
-                "bearerFormat": "JWT",
-                "scheme": "bearer"
-            },
-            "BearerCritic": {
-                "type": "http",
-                "bearerFormat": "JWT",
-                "scheme": "bearer"
-            },
-            "BearerFilm": {
                 "type": "http",
                 "bearerFormat": "JWT",
                 "scheme": "bearer"

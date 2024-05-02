@@ -74,7 +74,7 @@ class FilmController extends Controller
      *     path="/api/films/{id}",
      *     summary="Mise à jour d'un film",
      *     tags={"Films"},
-     *     security={{"BearerAuth":{}}},
+     *     security={{"Token":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -134,12 +134,6 @@ class FilmController extends Controller
      *             @OA\Property(property="error", type="string", example="Le film n'existe pas.")
      *         )
      *     )
-     * )
-     * @OA\SecurityScheme(
-     *   securityScheme="BearerFilm",
-     *   type="http",
-     *   scheme="bearer",
-     *   bearerFormat="JWT"
      * )
      */
     public function update(Request $request, $id)

@@ -51,6 +51,67 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * @OA\Patch(
+     *     path="/users/{id}",
+     *     summary="Mise à jour du mot de passe de l'utilisateur",
+     *     tags={"Users"},
+     *     security={{"Token":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de l'utilisateur dont le mot de passe doit être mis à jour",
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Nouveau mot de passe de l'utilisateur",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="new_password", type="string", format="password", minLength=6, description="Nouveau mot de passe"),
+     *             @OA\Property(property="new_password_confirmation", type="string", format="password", minLength=6, description="Confirmation du nouveau mot de passe"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Mot de passe mis à jour avec succès",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", description="Message indiquant que le mot de passe a été mis à jour")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Non authentifié",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Non authentifié")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Accès interdit",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Vous n'avez pas les autorisations nécessaires pour cette action.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Utilisateur non trouvé",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Utilisateur non trouvé.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erreur de validation",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Le nouveau mot de passe et sa confirmation doivent correspondre."),
+     *             @OA\Property(property="errors", type="object", description="Liste des erreurs de validation détaillées", example={"new_password_confirmation": {"Le nouveau mot de passe et sa confirmation doivent correspondre."}})
+     *         )
+     *     )
+     * )
+     */
     public function update(Request $request, $id)
     {
         $user = $this->userRepository->getById($id);
