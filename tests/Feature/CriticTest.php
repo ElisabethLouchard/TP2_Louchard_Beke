@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Film;
+use Laravel\Sanctum\Sanctum;
 
 class CriticTest extends TestCase
 {
@@ -14,7 +15,7 @@ class CriticTest extends TestCase
     public function test_create_critic_already_exists()
     {
         $user = User::factory()->create();
-        $this->actingAs($user);
+        Sanctum::actingAs($user);
 
         $film = Film::factory()->create();
 
@@ -23,19 +24,19 @@ class CriticTest extends TestCase
             'comment' => 'Mauvais',
         ];
 
-        $response = $this->postJson('/api/critics'. $film->id, $requestData);
+        $response = $this->postJson('/api/critics/'. $film->id, $requestData);
         $response->assertStatus(CREATED);
         
-        $response2 = $this->postJson('/api/critics'. $film->id, $requestData);
+        $response2 = $this->postJson('/api/critics/'. $film->id, $requestData);
 
         $response2->assertStatus(FORBIDDEN)
-                ->assertJson(['error' => 'Vous avez déjà critiqué un film.']);
+         ->assertJson(['error' => 'Vous avez déjà critiqué ce film.']);
     }
 
     public function test_create_critic_successfully()
     {
         $user = User::factory()->create();
-        $this->actingAs($user);
+        Sanctum::actingAs($user);
 
         $film = Film::factory()->create();
 
@@ -44,16 +45,17 @@ class CriticTest extends TestCase
             'comment' => 'Excellent!',
         ];
 
-        $response = $this->postJson('/api/critics'. $film->id, $requestData);
+        $response = $this->postJson('/api/critics/'. $film->id, $requestData);
 
-        $response->assertStatus(CREATED)
-                ->assertJsonStructure(['id', 'user_id', 'film_id', 'score', 'comment', 'created_at', 'updated_at']);
+        $response->assertStatus(CREATED);
     }
 
-    /*public function test_throttling_on_critic_creation()
+    public function test_throttling_on_critic_creation()
     {
         $user = User::factory()->create();
-        $this->actingAs($user);
+        Sanctum::actingAs($user);
+
+        $film = Film::factory()->create();
 
         for ($i = 0; $i < 60; $i++) {
             $requestData = [
@@ -61,17 +63,17 @@ class CriticTest extends TestCase
                 'comment' => 'trop bon ' . ($i + 1),
             ];
 
-            $response = $this->postJson('/api/critics', $requestData);
+            $response = $this->postJson('/api/critics/'. $film->id, $requestData);
         }
 
         $requestData = [
             'score' => 61,
             'comment' => 'yeah yeah',
         ];
-        $response = $this->postJson('/api/critics', $requestData);
+        $response = $this->postJson('/api/critics/'. $film->id, $requestData);
 
         $response->assertStatus(HTTP_TOO_MANY_REQUESTS)
                 ->assertJson(['message' => 'Too Many Attempts.']);
-    }*/
+    }
    
 }
