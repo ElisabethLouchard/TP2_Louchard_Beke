@@ -420,13 +420,13 @@
                 ]
             }
         },
-        "/users/{id}": {
+        "/api/users/{id}": {
             "patch": {
                 "tags": [
                     "Users"
                 ],
                 "summary": "Mise à jour du mot de passe de l'utilisateur",
-                "operationId": "6055962f27a3fb88a3445c27693dcf5f",
+                "operationId": "872a537e8eb13c26c5542c7d73269a80",
                 "parameters": [
                     {
                         "name": "id",
@@ -449,13 +449,15 @@
                                         "description": "Nouveau mot de passe",
                                         "type": "string",
                                         "format": "password",
-                                        "minLength": 6
+                                        "minLength": 6,
+                                        "example": "fortnight"
                                     },
                                     "new_password_confirmation": {
                                         "description": "Confirmation du nouveau mot de passe",
                                         "type": "string",
                                         "format": "password",
-                                        "minLength": 6
+                                        "minLength": 6,
+                                        "example": "fortnight"
                                     }
                                 },
                                 "type": "object"

@@ -53,7 +53,7 @@ class UserController extends Controller
 
     /**
      * @OA\Patch(
-     *     path="/users/{id}",
+     *     path="/api/users/{id}",
      *     summary="Mise à jour du mot de passe de l'utilisateur",
      *     tags={"Users"},
      *     security={{"Token":{}}},
@@ -70,8 +70,8 @@ class UserController extends Controller
      *         required=true,
      *         description="Nouveau mot de passe de l'utilisateur",
      *         @OA\JsonContent(
-     *             @OA\Property(property="new_password", type="string", format="password", minLength=6, description="Nouveau mot de passe"),
-     *             @OA\Property(property="new_password_confirmation", type="string", format="password", minLength=6, description="Confirmation du nouveau mot de passe"),
+     *             @OA\Property(property="new_password", type="string", format="password", minLength=6, description="Nouveau mot de passe", example="fortnight"),
+     *             @OA\Property(property="new_password_confirmation", type="string", format="password", minLength=6, description="Confirmation du nouveau mot de passe", example="fortnight"),
      *         ),
      *     ),
      *     @OA\Response(
