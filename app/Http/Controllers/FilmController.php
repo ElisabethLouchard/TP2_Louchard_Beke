@@ -136,7 +136,7 @@ class FilmController extends Controller
      *     )
      * )
      * @OA\SecurityScheme(
-     *   securityScheme="BearerAuth",
+     *   securityScheme="BearerFilm",
      *   type="http",
      *   scheme="bearer",
      *   bearerFormat="JWT"

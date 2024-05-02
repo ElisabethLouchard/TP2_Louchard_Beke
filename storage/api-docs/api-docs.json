@@ -155,6 +155,112 @@
                 ]
             }
         },
+        "/api/critics/{filmId}": {
+            "post": {
+                "tags": [
+                    "Critics"
+                ],
+                "summary": "Créer une critique pour un film",
+                "operationId": "3baa3c00d1f5350fc3ade5e4ffbb1da0",
+                "parameters": [
+                    {
+                        "name": "filmId",
+                        "in": "path",
+                        "description": "ID du film pour lequel la critique est créée",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Données de la critique à créer",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "score": {
+                                        "description": "Score attribué à la critique",
+                                        "type": "integer"
+                                    },
+                                    "comment": {
+                                        "description": "Commentaire de la critique",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Critique créée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "ID de la critique créée",
+                                            "type": "integer"
+                                        },
+                                        "user_id": {
+                                            "description": "ID de l'utilisateur ayant créé la critique",
+                                            "type": "integer"
+                                        },
+                                        "film_id": {
+                                            "description": "ID du film concerné par la critique",
+                                            "type": "integer"
+                                        },
+                                        "score": {
+                                            "description": "Score attribué à la critique",
+                                            "type": "integer"
+                                        },
+                                        "comment": {
+                                            "description": "Commentaire de la critique",
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "description": "Date et heure de création de la critique",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "description": "Date et heure de mise à jour de la critique",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Accès interdit",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Vous avez déjà critiqué ce film."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/films/{id}": {
             "put": {
                 "tags": [
@@ -314,7 +420,12 @@
                 "bearerFormat": "JWT",
                 "scheme": "bearer"
             },
-            "BearerAuth": {
+            "BearerCritic": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            },
+            "BearerFilm": {
                 "type": "http",
                 "bearerFormat": "JWT",
                 "scheme": "bearer"
