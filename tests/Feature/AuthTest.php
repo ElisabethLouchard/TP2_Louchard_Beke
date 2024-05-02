@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
@@ -13,6 +13,7 @@ define('LIMIT_THROTTLING', 5);
 
 class AuthTest extends TestCase
 {
+    use DatabaseMigrations;
     /**
      * A basic feature test example.
      */

@@ -9,6 +9,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Repository\FilmRepositoryInterface;
+use Illuminate\Support\Facades\Validator;
 
 
 class FilmController extends Controller
@@ -29,8 +30,29 @@ class FilmController extends Controller
             $roleId = $user->role_id;
             if($roleId == ADMIN)
             {
-                $film = $this->filmRepository->create($request->all());
-                return (new FilmResource($film))->response()->setStatusCode(CREATED);
+                $rules = [
+                    "title" => ['required', 'string'],
+                    'release_year' => ['required', 'int'],
+                    'length' => ['required', 'int'],
+                    "description" =>['required', 'string'],
+                    "rating" => ['required', 'int'],
+                    "language_id"=> ['required', 'int'],
+                    "special_features"=> ['required', 'string'],
+                    "image"=> ['required', 'string']
+                ];
+        
+                // Validate incoming request data
+                $validator = Validator::make($request->all(), $rules);
+        
+                if ($validator->fails()) {
+                    
+                    return response()->json(['message' => $validator->errors()], INVALID_DATA);
+                }
+                else
+                {
+                    $film = $this->filmRepository->create($request->all());
+                    return (new FilmResource($film))->response()->setStatusCode(CREATED);
+                }
             }
             else
             {
