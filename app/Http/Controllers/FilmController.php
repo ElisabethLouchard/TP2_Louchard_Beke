@@ -41,7 +41,6 @@ class FilmController extends Controller
                     "image"=> ['required', 'string']
                 ];
         
-                // Validate incoming request data
                 $validator = Validator::make($request->all(), $rules);
         
                 if ($validator->fails()) {
@@ -79,14 +78,18 @@ class FilmController extends Controller
             $roleId = $user->role_id;
             if($roleId == ADMIN)
             {
-                $filmToDelete = Film::findOrFail($film_id);
+                $filmToDelete = $this->filmRepository->getById($film_id);
+                //Film::findOrFail($film_id);
                 $critics = $filmToDelete->critics;
 
+        
                 foreach($critics as $critic)
                 {
-                    $critic->delete();
+                    $this->filmRepository->delete($critic->id);
+                    //$critic->delete();
                 }
-                $filmToDelete->delete();
+                $this->filmRepository->delete($filmToDelete->id);
+                //$filmToDelete->delete();
 
                 return response()->json(['message' => "Suppression réussie"], NO_CONTENT);
             }

@@ -57,8 +57,10 @@ class FilmTest extends TestCase
             "image"=> "love of my life"
         ];
 
+        $error_message = ['message' => "Unauthenticated."];
         $response = $this->postJson('/api/films', $json);
         $response->assertStatus(UNAUTHORIZED);
+        $response->assertJsonFragment($error_message);
     }
 
     
@@ -110,7 +112,6 @@ class FilmTest extends TestCase
 
         $response = $this->postJson('/api/films', $json);
         $response->assertStatus(INVALID_DATA);
-        //$response->assertJson($json);
     }
 
     
@@ -145,7 +146,6 @@ class FilmTest extends TestCase
 
         $response = $this->postJson('/api/films', $json);
         $response->assertStatus(HTTP_TOO_MANY_REQUESTS);
-        //$response->assertJsonFragment($json);
     }
 
     
@@ -176,8 +176,6 @@ class FilmTest extends TestCase
         $response = $this->delete('/api/films/' . $user->id);
 
         $response->assertStatus(NO_CONTENT);
-        //$response->assertJsonFragment($json);
-
     }
 
     public function testDeleteFilmShouldReturn401WhenNotAuthenticated()
@@ -237,8 +235,10 @@ class FilmTest extends TestCase
         $filmToDelete = $this->postJson('/api/films', $json);
         $filmToDelete->id = 1;
         $response = $this->delete('/api/films/' . $filmToDelete->id);
-
+        
+        $error_message = ['message' => "L'utilsateur n'a pas les permissions pour supprimer ce film"];
         $response->assertStatus(FORBIDDEN);
+        $response->assertJson($error_message);
     }
 
     public function testDeleteFilmShouldReturn429WhenTooManyRequest()

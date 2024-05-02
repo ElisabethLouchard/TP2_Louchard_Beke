@@ -42,7 +42,10 @@ class UserTest extends TestCase
     {
         
         $response = $this->getJson('/api/users/1');
+
+        $error_message = ['message' => "Unauthenticated."];
         $response->assertStatus(UNAUTHORIZED);
+        $response->assertJsonFragment($error_message);
     }
 
     
@@ -58,8 +61,10 @@ class UserTest extends TestCase
         Sanctum::actingAs($user, ['*']);
         $user->id = 1;
 
+        $error_message = ['message' => "L'utilsateur n'a pas les permissions pour afficher cet utilisateur"];
         $response = $this->getJson('/api/users/' . $user->id *2);
         $response->assertStatus(FORBIDDEN);
+        $response->assertJsonFragment($error_message);
     }
 
     public function testGetUserShouldReturn429WhenTooManyRequest()
