@@ -51,4 +51,27 @@ class UserController extends Controller
         }
     }
 
+    public function update(Request $request, $id)
+    {
+        $user = $this->userRepository->getById($id);
+
+        if (!$user) {
+            return response()->json(['error' => 'Utilisateur non trouvé.'], NOT_FOUND);
+        }
+    
+        if (Auth::user()->id !== $id) {
+            return response()->json(['error' => 'Vous n\'avez pas les autorisations nécessaires pour cette action.'], FORBIDDEN);
+        }
+    
+        $validatedData = $request->validate([
+            'new_password' => 'required|min:6',
+            'new_password_confirmation' => 'required|same:new_password',
+        ]);
+    
+        $user->password = bcrypt($validatedData['new_password']);
+        $user->save();
+    
+        return response()->json(['message' => 'Mot de passe mis à jour avec succès.'], OK);
+    }
+
 }
