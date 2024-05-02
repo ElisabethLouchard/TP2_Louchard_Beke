@@ -1,7 +1,7 @@
 <?php
 
 namespace Tests\Feature;
-
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 use App\Models\User;
@@ -74,5 +74,27 @@ class UserTest extends TestCase
                  //->assertJson(['error' => 'Utilisateur non trouvé.']);
     }
 
-    // THROTTLE 
+    public function test_throttling_on_film_creation()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        for ($i = 0; $i < 60; $i++) {
+            $requestData = [
+                'new_password' => $i + 1,
+                'new_password_confirmation' => $i + 1,
+            ];
+
+            $response = $this->postJson('/api/critics', $requestData);
+        }
+
+        $requestData = [
+            'new_password' => 61,
+            'new_password_confirmation' => 'yeah yeah',
+        ];
+        $response = $this->postJson('/api/films', $requestData);
+
+        $response->assertStatus(HTTP_TOO_MANY_REQUESTS)
+                ->assertJson(['message' => 'Too Many Attempts.']);
+    }
 }
