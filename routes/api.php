@@ -25,7 +25,7 @@ Route::middleware(['throttle:60,1', 'auth:sanctum'])->group(function(){
     Route::post('films', 'App\Http\Controllers\FilmController@create');
     Route::put('/films/{id}', 'App\Http\Controllers\FilmController@update');
     Route::delete('/films/{id}', 'App\Http\Controllers\FilmController@destroy');
-    Route::post('/critics', 'App\Http\Controllers\CriticController@store');
+    Route::post('/critics/{film_id}', 'App\Http\Controllers\CriticController@store');
     Route::get('/users/{id}', 'App\Http\Controllers\UserController@show');
     Route::put('/users/{id}', 'App\Http\Controllers\FilmController@update');
 });

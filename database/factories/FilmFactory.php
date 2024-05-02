@@ -20,7 +20,8 @@ class FilmFactory extends Factory
             'description' => $this->faker->text(100),
             'rating' => $this->faker->text(5),
             'special_features' => $this->faker->text(200),
-            'image' => $this->faker->text(40)
+            'image' => $this->faker->text(40),
+            'language_id' => 1
         ];
     }
 }
