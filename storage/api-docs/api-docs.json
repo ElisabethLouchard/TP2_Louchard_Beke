@@ -8,7 +8,7 @@
         "/api/signup": {
             "post": {
                 "tags": [
-                    "Users"
+                    "Auth"
                 ],
                 "summary": "Create a new user",
                 "operationId": "createUser",
@@ -123,7 +123,7 @@
         "/api/signout": {
             "get": {
                 "tags": [
-                    "Authentification"
+                    "Auth"
                 ],
                 "summary": "Déconnexion de l'utilisateur",
                 "operationId": "43ce3b3d0b0c7a68db4f95f44ddf0a2c",
@@ -154,11 +154,167 @@
                     }
                 ]
             }
+        },
+        "/api/films/{id}": {
+            "put": {
+                "tags": [
+                    "Films"
+                ],
+                "summary": "Mise à jour d'un film",
+                "operationId": "d2fbe78b6e79c3f1cfb5067d25f9a039",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID du film à mettre à jour",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Données du film à mettre à jour",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "release_year": {
+                                        "type": "integer"
+                                    },
+                                    "length": {
+                                        "type": "integer"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "rating": {
+                                        "type": "string"
+                                    },
+                                    "language_id": {
+                                        "type": "integer"
+                                    },
+                                    "special_features": {
+                                        "type": "string"
+                                    },
+                                    "image": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Film mis à jour avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "title": {
+                                            "type": "string"
+                                        },
+                                        "release_year": {
+                                            "type": "integer"
+                                        },
+                                        "length": {
+                                            "type": "integer"
+                                        },
+                                        "description": {
+                                            "type": "string"
+                                        },
+                                        "rating": {
+                                            "type": "string"
+                                        },
+                                        "language_id": {
+                                            "type": "integer"
+                                        },
+                                        "special_features": {
+                                            "type": "string"
+                                        },
+                                        "image": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Non authentifié"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Accès interdit",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Vous n'avez pas les autorisations nécessaires pour cette action."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Film non trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Le film n'existe pas."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
         "securitySchemes": {
             "Token": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            },
+            "BearerAuth": {
                 "type": "http",
                 "bearerFormat": "JWT",
                 "scheme": "bearer"

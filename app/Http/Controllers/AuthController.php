@@ -14,7 +14,7 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/api/signup",
-     *     tags={"Users"},
+     *     tags={"Auth"},
      *     summary="Create a new user",
      *     operationId="createUser",
      *     @OA\RequestBody(
@@ -149,7 +149,7 @@ class AuthController extends Controller
     * @OA\Get(
     *     path="/api/signout",
     *     summary="Déconnexion de l'utilisateur",
-    *     tags={"Authentification"},
+    *     tags={"Auth"},
     *     security={{"Token":{}}},
     *     @OA\Response(
     *         response=204,

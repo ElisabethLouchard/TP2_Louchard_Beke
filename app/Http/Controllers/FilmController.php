@@ -69,6 +69,79 @@ class FilmController extends Controller
         }
     }
     
+    /**
+     * @OA\Put(
+     *     path="/api/films/{id}",
+     *     summary="Mise à jour d'un film",
+     *     tags={"Films"},
+     *     security={{"BearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID du film à mettre à jour",
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Données du film à mettre à jour",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="title", type="string"),
+     *             @OA\Property(property="release_year", type="integer"),
+     *             @OA\Property(property="length", type="integer"),
+     *             @OA\Property(property="description", type="string"),
+     *             @OA\Property(property="rating", type="string"),
+     *             @OA\Property(property="language_id", type="integer"),
+     *             @OA\Property(property="special_features", type="string"),
+     *             @OA\Property(property="image", type="string"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Film mis à jour avec succès",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer"),
+     *             @OA\Property(property="title", type="string"),
+     *             @OA\Property(property="release_year", type="integer"),
+     *             @OA\Property(property="length", type="integer"),
+     *             @OA\Property(property="description", type="string"),
+     *             @OA\Property(property="rating", type="string"),
+     *             @OA\Property(property="language_id", type="integer"),
+     *             @OA\Property(property="special_features", type="string"),
+     *             @OA\Property(property="image", type="string"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Non authentifié",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Non authentifié")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Accès interdit",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Vous n'avez pas les autorisations nécessaires pour cette action.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Film non trouvé",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Le film n'existe pas.")
+     *         )
+     *     )
+     * )
+     * @OA\SecurityScheme(
+     *   securityScheme="BearerAuth",
+     *   type="http",
+     *   scheme="bearer",
+     *   bearerFormat="JWT"
+     * )
+     */
     public function update(Request $request, $id)
     {
         if (Auth::user()->role_id !== ADMIN) {
