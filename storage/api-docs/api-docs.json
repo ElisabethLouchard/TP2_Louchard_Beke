@@ -287,28 +287,36 @@
                             "schema": {
                                 "properties": {
                                     "title": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "Monster Inc"
                                     },
                                     "release_year": {
-                                        "type": "integer"
+                                        "type": "integer",
+                                        "example": 2001
                                     },
                                     "length": {
-                                        "type": "integer"
+                                        "type": "integer",
+                                        "example": 121
                                     },
                                     "description": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "Yayy"
                                     },
                                     "rating": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "G"
                                     },
                                     "language_id": {
-                                        "type": "integer"
+                                        "type": "integer",
+                                        "example": 1
                                     },
                                     "special_features": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "languages"
                                     },
                                     "image": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "bla"
                                     }
                                 },
                                 "type": "object"
