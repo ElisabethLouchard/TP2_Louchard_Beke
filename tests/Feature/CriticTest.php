@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Film;
 use App\Models\Critic;
 use App\Models\Language;
+use GuzzleHttp\Exception\TooManyRedirectsException;
 
 class CriticTest extends TestCase
 {
@@ -53,6 +54,30 @@ class CriticTest extends TestCase
 
         $response->assertStatus(CREATED)
                 ->assertJsonStructure(['id', 'user_id', 'film_id', 'score', 'comment', 'created_at', 'updated_at']);
+    }
+
+    public function test_throttling_on_critic_creation()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        for ($i = 0; $i < 60; $i++) {
+            $requestData = [
+                'score' => $i + 1,
+                'comment' => 'trop bon ' . ($i + 1),
+            ];
+
+            $response = $this->postJson('/api/critics', $requestData);
+        }
+
+        $requestData = [
+            'score' => 61,
+            'comment' => 'yeah yeah',
+        ];
+        $response = $this->postJson('/api/critics', $requestData);
+
+        $response->assertStatus(HTTP_TOO_MANY_REQUESTS)
+                ->assertJson(['message' => 'Too Many Attempts.']);
     }
    
 }
