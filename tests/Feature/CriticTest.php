@@ -3,13 +3,8 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
-use App\Models\Film;
-use App\Models\Critic;
-use App\Models\Language;
-use GuzzleHttp\Exception\TooManyRedirectsException;
 
 class CriticTest extends TestCase
 {

@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Resources\FilmResource;
 use App\Models\Film;
-use App\Models\Role;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Repository\FilmRepositoryInterface;
 use Exception;
@@ -51,34 +49,30 @@ class FilmController extends Controller
     
     public function update(Request $request, $id)
     {
-        try {
-
-            if (Auth::user()->role_id !== ADMIN) {
-                return response()->json(['error' => 'Vous n\'avez pas les autorisations nécessaires pour cette action.'], FORBIDDEN);
-            }
+        if (Auth::user()->role_id !== ADMIN) {
+            return response()->json(['error' => 'Vous n\'avez pas les autorisations nécessaires pour cette action.'], FORBIDDEN);
+        }
     
-            $movie = $this->filmRepository->getById($id);
+        $movie = $this->filmRepository->getById($id);
     
-            $validatedData = $request->validate([
-                'title' => 'required|string',
-                'release_year' => 'required|integer',
-                'length' => 'required|integer',
-                'description' => 'required|string',
-                'rating' => 'required|string',
-                'language_id' => 'required|integer',
-                'special_features' => 'required|string',
-                'image' => 'required|string',
-            ]);
-    
-            $movie->update($validatedData);
-    
-            return response()->json($movie, OK);
-        } catch(ValidationException $ex){
+        if (!$movie) {
             return response()->json(['error' => 'Le film n\'existe pas.'], NOT_FOUND);
         }
-        catch (Exception $ex) {
-            return response()->json(['error' => 'Erreur serveur.'], SERVER_ERROR);
-        }
+    
+        $validatedData = $request->validate([
+            'title' => 'required|string',
+            'release_year' => 'required|integer',
+            'length' => 'required|integer',
+            'description' => 'required|string',
+            'rating' => 'required|string',
+            'language_id' => 'required|integer',
+            'special_features' => 'required|string',
+            'image' => 'required|string',
+        ]);
+    
+        $movie->update($validatedData);
+    
+        return response()->json($movie, OK);
     }    
     
     public function destroy(Request $request, int $film_id)
