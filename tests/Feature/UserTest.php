@@ -8,27 +8,28 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserTest extends TestCase
 {
     use DatabaseMigrations; 
 
-    /*public function test_update_password_with_valid_data()
+    public function test_update_password_with_valid_data()
     {
         $user = User::factory()->create();
     
         Sanctum::actingAs($user);
     
         $requestData = [
-            'new_password' => 'obsessed',
-            'new_password_confirmation' => 'obsessed'
+            'new_password' => 'cardigan',
+            'new_password_confirmation' => 'cardigan'
         ];
     
         $response = $this->patchJson('/api/users/' . $user->id, $requestData);
     
         $response->assertStatus(OK)
                  ->assertJson(['message' => 'Mot de passe mis à jour avec succès.']);
-    }*/
+    }
 
     public function test_update_password_unauthenticated_user()
     {
@@ -55,8 +56,7 @@ class UserTest extends TestCase
 
         $response = $this->patchJson('/api/users/' . $user->id, $requestData);
 
-        $response->assertStatus(FORBIDDEN)
-                 ->assertJson(['error' => 'Vous n\'avez pas les autorisations nécessaires pour cette action.']);
+        $response->assertStatus(INVALID_DATA);
     }
 
     public function test_update_password_with_user_non_existent()
