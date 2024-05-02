@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repository\UserRepositoryInterface;
+use Dotenv\Exception\ValidationException;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -19,31 +21,25 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
-        try {
-            $user = $this->userRepository->getById($id);
-            $userRequest = $request->user()->id;
+        $user = $this->userRepository->getById($id);
 
-            if($id != $userRequest){
-                return response()->json(['error' => 'Mauvais utilisateur.'], FORBIDDEN);
-            }
-            
-            if (!$user) {
-                return response()->json(['error' => 'Utilisateur non authentifié.'], NOT_FOUND);
-            }
-    
-            $validatedData = $request->validate([
-                'new_password' => 'required|min:6',
-                'new_password_confirmation' => 'required|same:new_password',
-            ]);
-    
-            $user->password = bcrypt($validatedData['new_password']);
-            $user->save();
-    
-            return response()->json(['message' => 'Mot de passe mis à jour avec succès.'], OK);
-    
-        } catch (Exception $ex) {
-            return response()->json(['error' => 'Erreur lors de la mise à jour du mot de passe.'], SERVER_ERROR);
+        if (!$user) {
+            return response()->json(['error' => 'Utilisateur non trouvé.'], NOT_FOUND);
         }
+    
+        if (Auth::user()->id !== $id) {
+            return response()->json(['error' => 'Vous n\'avez pas les autorisations nécessaires pour cette action.'], FORBIDDEN);
+        }
+    
+        $validatedData = $request->validate([
+            'new_password' => 'required|min:6',
+            'new_password_confirmation' => 'required|same:new_password',
+        ]);
+    
+        $user->password = bcrypt($validatedData['new_password']);
+        $user->save();
+    
+        return response()->json(['message' => 'Mot de passe mis à jour avec succès.'], OK);
     }
 
     public function show(int $user_id)

@@ -23,8 +23,6 @@ class CriticController extends Controller
         $user = Auth::user();
 
         $request->validate([
-            'user_id' => 'required', 
-            'film_id'=> 'required', 
             'score' => 'required',
             'comment'=> 'required', 
         ]);

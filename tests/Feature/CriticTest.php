@@ -20,13 +20,11 @@ class CriticTest extends TestCase
         $this->actingAs($user);
 
         $requestData = [
-            'film_id' => 1,
             'score' => 2,
             'comment' => 'Mauvais',
         ];
 
         $requestData2 = [
-            'film_id' => 2,
             'score' => 1,
             'comment' => 'Ewww',
         ];

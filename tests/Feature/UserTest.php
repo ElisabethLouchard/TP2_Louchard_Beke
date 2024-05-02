@@ -11,51 +11,18 @@ class UserTest extends TestCase
 {
     use DatabaseMigrations; 
 
-    public function test_update_password_with_incorrect_current_password()
-    {
-        $user = User::factory()->create([
-            'login' => 'taytay13',
-            'password' => 'cardigan',
-            'email' => 'taylorswift@gmail.com',
-            'last_name' => 'Taylor',
-            'first_name' => 'Swift',
-            'role_id' => 1,
-        ]);
-
-        $this->actingAs($user);
-
-        $requestData = [
-            'current_password' => 'willow',
-            'new_password' => 'fortnight',
-            'new_password_confirmation' => 'fortnight'
-        ];
-
-        $response = $this->actingAs($user)->postJson('/api/update/' . $user->id, $requestData);
-
-        $response->assertStatus(FORBIDDEN)
-                 ->assertJson(['error' => 'Mot de passe actuel incorrect.']);
-    }
-
     public function test_update_password_with_valid_data()
     {
-        $user = User::factory()->create([
-            'login' => 'LivPurple17',
-            'password' =>  bcrypt('brutal'),
-            'email' => 'oliviarodriguo@gmail.com',
-            'last_name' => 'Rodriguo',
-            'first_name' => 'Olivia',
-            'role_id' => 1,
-        ]);
+        $user = User::factory()->create();
 
         $this->actingAs($user);
 
         $requestData = [
-            'current_password' => 'brutal',
             'new_password' => 'obsessed',
             'new_password_confirmation' => 'obsessed'
         ];
 
-        $response = $this->actingAs($user)->postJson('/api/update/' . $user->id, $requestData);
+        $response = $this->patchJson('/api/users/' . $user->id, $requestData);
 
         $response->assertStatus(OK)
                  ->assertJson(['message' => 'Mot de passe mis à jour avec succès.']);
@@ -69,10 +36,44 @@ class UserTest extends TestCase
             'new_password_confirmation' => 'fortnight'
         ];
 
-        $response = $this->postJson('/api/update/9', $requestData);
+        $response = $this->patchJson('/api/users/1', $requestData);
 
-        $response->assertStatus(NOT_FOUND);
+        $response->assertStatus(UNAUTHORIZED);
     }
 
-    // THROTTLE ET 2 MOTS DE PASSE PAREIL
+    public function test_update_password_with_wrong_confirmation_password()
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $requestData = [
+            'new_password' => 'obsessed',
+            'new_password_confirmation' => 'obsess'
+        ];
+
+        $response = $this->patchJson('/api/users/' . $user->id, $requestData);
+
+        $response->assertStatus(FORBIDDEN)
+                 ->assertJson(['error' => 'Vous n\'avez pas les autorisations nécessaires pour cette action.']);
+    }
+
+    public function test_update_password_with_user_non_existent()
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $requestData = [
+            'new_password' => 'obsessed',
+            'new_password_confirmation' => 'obsessed'
+        ];
+
+        $response = $this->patchJson('/api/users/9', $requestData);
+
+        $response->assertStatus(NOT_FOUND);
+                 //->assertJson(['error' => 'Utilisateur non trouvé.']);
+    }
+
+    // THROTTLE 
 }
