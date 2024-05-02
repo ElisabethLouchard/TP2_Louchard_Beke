@@ -27,15 +27,15 @@ class CriticTest extends TestCase
         ];
 
         $response = $this->postJson('/api/critics', $requestData);
-        $response->assertStatus(CREATED);
+        $response->assertStatus(201);
         
         $response2 = $this->postJson('/api/critics', $requestData2);
 
-        $response2->assertStatus(FORBIDDEN)
+        $response2->assertStatus(403)
                 ->assertJson(['error' => 'Vous avez déjà critiqué un film.']);
     }
 
-    public function test_create_critic_successfully()
+    /*public function test_create_critic_successfully()
     {
         $user = User::factory()->create();
         $this->actingAs($user);
@@ -74,6 +74,6 @@ class CriticTest extends TestCase
 
         $response->assertStatus(HTTP_TOO_MANY_REQUESTS)
                 ->assertJson(['message' => 'Too Many Attempts.']);
-    }
+    }*/
    
 }

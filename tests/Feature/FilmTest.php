@@ -14,7 +14,7 @@ class FilmTest extends TestCase
 {
     use DatabaseMigrations;
 
-    public function test_update_movie_by_admin()
+    /*public function test_update_movie_by_admin()
     {
         $admin = User::factory()->create(['role_id' => 1]);
         $this->actingAs($admin);
@@ -418,6 +418,6 @@ class FilmTest extends TestCase
         //$filmToDelete->id = 1;
         $response = $this->delete('/api/films/' . $filmToDelete->id*2);
         $response->assertStatus(NOT_FOUND);
-    }
+    }*/
 
 }

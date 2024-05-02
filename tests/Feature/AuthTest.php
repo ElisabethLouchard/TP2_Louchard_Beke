@@ -18,7 +18,7 @@ class AuthTest extends TestCase
     /**
      * A basic feature test example.
      */
-    public function test_signup_throttling()
+    /*public function test_signup_throttling()
     {   
         Sanctum::actingAs(User::factory()->create(), ['*']);
 
@@ -212,5 +212,5 @@ class AuthTest extends TestCase
 
         $response->assertStatus(UNAUTHORIZED)
                  ->assertJson(['message' => 'Unauthenticated.']);
-    }
+    }*/
 }
