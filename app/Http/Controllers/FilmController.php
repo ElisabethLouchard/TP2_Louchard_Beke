@@ -291,19 +291,22 @@ class FilmController extends Controller
             {
                 $filmToDelete = $this->filmRepository->getById($film_id);
                 $critics = $filmToDelete->critics;
-
-        
+                $actors = $filmToDelete->actors;
+               
+                foreach($actors as $actor)
+                {
+                    $this->filmRepository->delete($actor->id);
+                }
                 foreach($critics as $critic)
                 {
                     $this->filmRepository->delete($critic->id);
                 }
                 $this->filmRepository->delete($filmToDelete->id);
-
                 return response()->json(['message' => "Suppression réussie"], NO_CONTENT);
             }
             else
             {
-                return response()->json(['message' => "L'utilsateur n'a pas les permissions pour supprimer ce film"], FORBIDDEN); 
+                return response()->json(['message' => "L'utilsateur n'a pas les permissions pour supprimer ce film"], FORBIDDEN);
             }
         }
         else if(Auth::check() == false)
@@ -314,7 +317,7 @@ class FilmController extends Controller
         {
             return response()->json(['message' => "Erreur au niveau du serveur"], SERVER_ERROR);
         }
-
+ 
     }
 
 }
