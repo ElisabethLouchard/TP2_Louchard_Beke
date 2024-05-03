@@ -22,6 +22,90 @@ class FilmController extends Controller
         $this->filmRepository = $filmRepository;
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/films",
+     *     summary="Création d'un film",
+     *     tags={"Films"},
+     *     security={{"Token":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Film data",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="title",
+     *                     type="string",
+     *                     example="Nom du film"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="release_year",
+     *                     type="integer",
+     *                     format="year",
+     *                     example=2004
+     *                 ),
+     *                 @OA\Property(
+     *                     property="length",
+     *                     type="integer",
+     *                     example=120
+     *                 ),
+     *                 @OA\Property(
+     *                     property="description",
+     *                     type="string",
+     *                     example="Description du film"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="rating",
+     *                     type="integer",
+     *                     example=5
+     *                 ),
+     *                 @OA\Property(
+     *                     property="language_id",
+     *                     type="integer",
+     *                     example=1
+     *                 ),
+     *                 @OA\Property(
+     *                     property="special_features",
+     *                     type="string",
+     *                     example="Caractéristiques spéciales du film"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="image",
+     *                     type="string",
+     *                     example="Lien vers l'image du film"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Création réussie"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Non authentifié",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string",
+     *                 example="Non authentifié"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="L'utilisateur n'a pas les permissions requises",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string",
+     *                 example="Non authentifié"
+     *             )
+     *         )
+     *     )
+     * )
+     */
     public function create(Request $request)
     {
         if(Auth::check())

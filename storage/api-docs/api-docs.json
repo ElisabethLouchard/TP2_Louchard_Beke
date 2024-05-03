@@ -261,6 +261,103 @@
                 ]
             }
         },
+        "/api/films": {
+            "post": {
+                "tags": [
+                    "Films"
+                ],
+                "summary": "Création d'un film",
+                "operationId": "e346799b1a75f20aad69fdc824a4ff0b",
+                "requestBody": {
+                    "description": "Film data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Nom du film"
+                                    },
+                                    "release_year": {
+                                        "type": "integer",
+                                        "format": "year",
+                                        "example": 2004
+                                    },
+                                    "length": {
+                                        "type": "integer",
+                                        "example": 120
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Description du film"
+                                    },
+                                    "rating": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "language_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "special_features": {
+                                        "type": "string",
+                                        "example": "Caractéristiques spéciales du film"
+                                    },
+                                    "image": {
+                                        "type": "string",
+                                        "example": "Lien vers l'image du film"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Création réussie"
+                    },
+                    "401": {
+                        "description": "Non authentifié",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Non authentifié"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "L'utilisateur n'a pas les permissions requises",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Non authentifié"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Token": []
+                    }
+                ]
+            }
+        },
         "/api/films/{id}": {
             "put": {
                 "tags": [
