@@ -20,6 +20,61 @@ class UserController extends Controller
         $this->userRepository = $userRepository;
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/users/{user_id}",
+     *     summary="Afficher les détails d'un utilisateur",
+     *     tags={"Users"},
+     *     security={{"Token":{}}},
+     *     @OA\Parameter(
+     *         name="user_id",
+     *         in="path",
+     *         required=true,
+     *         description="ID de l'utilisateur à afficher",
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Détails de l'utilisateur",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="login", type="string", description="Login de l'utilisateur"),
+     *             @OA\Property(property="email", type="string", format="email", description="Adresse email de l'utilisateur"),
+     *             @OA\Property(property="last_name", type="string", description="Nom de famille de l'utilisateur"),
+     *             @OA\Property(property="first_name", type="string", description="Prénom de l'utilisateur")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Non authentifié",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="L'utilisateur n'est pas authentifié")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Accès interdit",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="L'utilisateur n'a pas les permissions pour afficher cet utilisateur")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Utilisateur non trouvé",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Utilisateur non trouvé")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erreur au niveau du serveur",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Erreur au niveau du serveur")
+     *         )
+     *     )
+     * )
+     */
     public function show(int $user_id)
     {
         if(Auth::check())
