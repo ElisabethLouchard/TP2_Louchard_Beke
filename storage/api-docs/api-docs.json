@@ -515,6 +515,43 @@
                         "Token": []
                     }
                 ]
+            },
+            "delete": {
+                "tags": [
+                    "Films"
+                ],
+                "summary": "Delete a film",
+                "operationId": "decacbac55d9f088563f35def674b92a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "L'id du film à supprimer",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Le film a été bien supprimé "
+                    },
+                    "404": {
+                        "description": "Le film n'a pas été trouvé"
+                    },
+                    "401": {
+                        "description": "Non authentifié"
+                    },
+                    "403": {
+                        "description": "L'utilisateur n'a pas les permissions requises pour la suppression"
+                    }
+                },
+                "security": [
+                    {
+                        "Token": []
+                    }
+                ]
             }
         },
         "/api/users/{user_id}": {

@@ -248,6 +248,39 @@ class FilmController extends Controller
         return response()->json($movie, OK);
     }   
     
+    /**
+     * @OA\Delete(
+     *     path="/api/films/{id}",
+     *     summary="Delete a film",
+     *     tags={"Films"},
+     *     security={{"Token":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="L'id du film à supprimer",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Le film a été bien supprimé "
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Le film n'a pas été trouvé"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Non authentifié"
+     *     ),
+     *    @OA\Response(
+     *         response=403,
+     *         description="L'utilisateur n'a pas les permissions requises pour la suppression"
+     *     )
+     * )
+     */
     public function destroy(Request $request, int $film_id)
     {
         if(Auth::check())
