@@ -99,6 +99,7 @@ class UserTest extends TestCase
                 ->assertJson(['message' => 'Too Many Attempts.']);
     }
 
+    // Test getUser
     public function testGetUserShouldReturn200WhenOk()
     {
         $user = User::create([

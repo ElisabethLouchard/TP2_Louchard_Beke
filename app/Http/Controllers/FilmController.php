@@ -164,7 +164,7 @@ class FilmController extends Controller
         return response()->json($movie, OK);
     }   
     
-    /*public function destroy(Request $request, int $film_id)
+    public function destroy(Request $request, int $film_id)
     {
         if(Auth::check())
         {
@@ -173,17 +173,14 @@ class FilmController extends Controller
             if($roleId == ADMIN)
             {
                 $filmToDelete = $this->filmRepository->getById($film_id);
-                //Film::findOrFail($film_id);
                 $critics = $filmToDelete->critics;
 
         
                 foreach($critics as $critic)
                 {
                     $this->filmRepository->delete($critic->id);
-                    //$critic->delete();
                 }
                 $this->filmRepository->delete($filmToDelete->id);
-                //$filmToDelete->delete();
 
                 return response()->json(['message' => "Suppression réussie"], NO_CONTENT);
             }
@@ -201,31 +198,6 @@ class FilmController extends Controller
             return response()->json(['message' => "Erreur au niveau du serveur"], SERVER_ERROR);
         }
 
-    }*/
-
-    public function destroy(Request $request, int $film_id)
-    {
-        if (Auth::check()) {
-            $user = Auth::user();
-            $roleId = $user->role_id;
-            
-            if ($roleId == ADMIN) {
-                $filmToDelete = Film::findOrFail($film_id);
-                $critics = $filmToDelete->critics;
-
-                foreach ($critics as $critic) {
-                    $critic->delete();
-                }
-
-                $filmToDelete->delete();
-
-                return response()->json(['message' => "Suppression réussie"], NO_CONTENT);
-            } else {
-                return response()->json(['message' => "L'utilisateur n'a pas les permissions pour supprimer ce film"], FORBIDDEN);
-            }
-        } else {
-            return response()->json(['message' => "L'utilisateur n'est pas authentifié"], UNAUTHORIZED);
-        }
     }
 
 }
