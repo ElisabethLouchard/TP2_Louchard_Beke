@@ -118,9 +118,9 @@ class FilmTest extends TestCase
         $response->assertStatus(HTTP_TOO_MANY_REQUESTS)
                 ->assertJson(['message' => 'Too Many Attempts.']);
     }
-    
+
     //Tests pour le create
-    /*public function testPostFilmShouldReturn201WhenCreated()
+    public function testPostFilmShouldReturn201WhenCreated()
     {
         $user = User::create([
             "login" => "login",
@@ -284,34 +284,11 @@ class FilmTest extends TestCase
 
     public function testDeleteFilmShouldReturn401WhenNotAuthenticated()
     {
-        $user = User::create([
-            "login" => "login",
-            "password" => bcrypt("blablabla"),
-            "email" => "aya@gmail.com",
-            "last_name" => "nakamura",
-            "first_name"=> "aya"
-        ]);
-        Sanctum::actingAs($user, ['*']);
-        $user->role_id = 2;
-        $json = [
-            "title"=> "First Love", 
-            "release_year"=> 2023,
-            "length"=> 6,
-            "description"=> "passionate",
-            "rating"=> 56,
-            "language_id"=> 1,
-            "special_features"=> "special person",
-            "image"=> "love of my life"
-        ];
+        $filmToDelete = Film::factory()->create();
+        $this->withoutMiddleware();
+        $response = $this->delete('/api/films/' . $filmToDelete->id);
 
-        $filmToDelete = $this->postJson('/api/films', $json);
-        //$filmToDelete->id = 1;
-        $this->getJson('/api/signout');
-        $this->assertEmpty($user->tokens);
-        //erreur à modifier
-        //$response = $this->delete('/api/films/' . $filmToDelete->id);
-
-        //$response->assertStatus(UNAUTHORIZED);
+        $response->assertStatus(UNAUTHORIZED);
     }
 
     public function testDeleteFilmShouldReturn403WhenForbidden()
@@ -325,24 +302,11 @@ class FilmTest extends TestCase
         ]);
         Sanctum::actingAs($user, ['*']);
         $user->role_id = 1;
-        $json = [
-            "title"=> "First Love", 
-            "release_year"=> 2023,
-            "length"=> 6,
-            "description"=> "passionate",
-            "rating"=> 56,
-            "language_id"=> 1,
-            "special_features"=> "special person",
-            "image"=> "love of my life"
-        ];
 
-        $filmToDelete = $this->postJson('/api/films', $json);
-        //$filmToDelete->id = 1;
+        $filmToDelete = Film::factory()->create();
         $response = $this->delete('/api/films/' . $filmToDelete->id);
         
-        $error_message = ['message' => "L'utilsateur n'a pas les permissions pour supprimer ce film"];
         $response->assertStatus(FORBIDDEN);
-        $response->assertJson($error_message);
     }
 
     public function testDeleteFilmShouldReturn429WhenTooManyRequest()
@@ -356,19 +320,8 @@ class FilmTest extends TestCase
         ]);
         Sanctum::actingAs($user, ['*']);
         $user->role_id = 2;
-        $json = [
-            "title"=> "First Love", 
-            "release_year"=> 2023,
-            "length"=> 6,
-            "description"=> "passionate",
-            "rating"=> 56,
-            "language_id"=> 1,
-            "special_features"=> "special person",
-            "image"=> "love of my life"
-        ];
 
-        $filmToDelete = $this->postJson('/api/films', $json);
-        //$filmToDelete->id = 1;
+        $filmToDelete = Film::factory()->create();
         for($i = 0; $i< 60 ; $i++)
         {
             $response = $this->delete('/api/films/' . $filmToDelete->id);
@@ -388,21 +341,10 @@ class FilmTest extends TestCase
         ]);
         Sanctum::actingAs($user, ['*']);
         $user->role_id = 2;
-        $json = [
-            "title"=> "First Love", 
-            "release_year"=> 2023,
-            "length"=> 6,
-            "description"=> "passionate",
-            "rating"=> 56,
-            "language_id"=> 1,
-            "special_features"=> "special person",
-            "image"=> "love of my life"
-        ];
 
-        $filmToDelete = $this->postJson('/api/films', $json);
-        //$filmToDelete->id = 1;
+        $filmToDelete = Film::factory()->create();
         $response = $this->delete('/api/films/' . $filmToDelete->id*2);
         $response->assertStatus(NOT_FOUND);
-    }*/
+    }
 
 }
